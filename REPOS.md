@@ -1,8 +1,8 @@
-# le-shop — repositories
+# le-shop-plugin — repositories
 
 | Repo | Role |
 |------|------|
-| **le-shop-overview** (this) | Marketing |
-| **le-shop** | Plugin source |
-| **le-crypto-app-store** | Store backend (SOL) |
+| **le-shop-plugin-overview** (this) | Marketing |
+| **le-shop-plugin** | Plugin source (private) |
+| **le-crypto-app-store** | Store backend (SOL, private) |
 | **le-crypto-app-store-overview** | Backend marketing |

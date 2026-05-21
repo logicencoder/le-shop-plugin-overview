@@ -14,10 +14,10 @@ WordPress plugin that maintains the **application catalogue** on logicencoder.co
 
 | System | Repo |
 |--------|------|
-| Telegram shop + payments | [le-crypto-app-store](https://github.com/logicencoder/le-crypto-app-store) |
-| Site-wide LE settings (SEO, security, alerts) | [le-settings](https://github.com/logicencoder/le-settings) — **different plugin** |
+| Telegram shop + payments | [le-crypto-app-store](https://github.com/logicencoder/le-crypto-app-store) (private) |
+| Site-wide LE settings (SEO, security, alerts) | [le-settings-plugin](https://github.com/logicencoder/le-settings-plugin) — **different plugin** |
 
-Implementation: [le-shop](https://github.com/logicencoder/le-shop) · [`ARCHITECTURE.md`](https://github.com/logicencoder/le-shop/blob/main/ARCHITECTURE.md)
+Implementation (private): [le-shop-plugin](https://github.com/logicencoder/le-shop-plugin) · [`ARCHITECTURE.md`](https://github.com/logicencoder/le-shop-plugin/blob/main/ARCHITECTURE.md)
 
 ---
 
