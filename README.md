@@ -1,36 +1,40 @@
 # LE Shop — WordPress catalogue plugin
 
-WordPress **catalogue authority** for the Logic Encoder Telegram Mini App store — operators manage `application` products in wp-admin; every publish/update/delete syncs to the crypto checkout backend.
+WordPress **catalogue authority** for the Logic Encoder Telegram Mini App store. Operators manage **`application`** custom post types in wp-admin; every publish, update, or delete syncs to the crypto checkout backend automatically.
 
 Private plugin: [logicencoder/le-shop-plugin](https://github.com/logicencoder/le-shop-plugin). Checkout and delivery: [le-crypto-app-store](https://github.com/logicencoder/le-crypto-app-store) — [store overview](https://github.com/logicencoder/le-crypto-app-store-overview).
 
-## The problem it solves
+## Split of responsibilities
 
-Product copy and pricing should live in WordPress where editors already work. Payments, chain matching, zip delivery, and the Telegram bot belong in Node — not duplicated in PHP.
-
-**LE Shop** owns the catalogue; **Crypto App Store** owns money and files.
+| Layer | Owns |
+|-------|------|
+| **LE Shop (this plugin)** | Product copy, pricing metadata, version badges, warehouse comparison in wp-admin |
+| **Crypto App Store backend** | USDC/ETH payments, unique amount matching, zip delivery, Telegram bot |
+| **le-settings-plugin** | Site security/SEO — unrelated to payments |
 
 ## Operator workflow
 
-Top-level **LE Shop** admin:
+**LE Shop** admin menu:
 
-- **Dashboard** — product counts, backend connectivity ping
-- **Items / Warehouse** — compare WordPress posts vs backend warehouse rows
-- **Settings** — backend URL, webhook secret, admin key, bot link
+- **Dashboard** — application counts, backend ping health
+- **Items / Warehouse** — side-by-side WordPress posts vs backend warehouse rows (missing files flagged)
+- **Settings** — backend URL, webhook secret, admin API key, Telegram bot link/username
 
-On save/delete of an `application` post, a fire-and-forget webhook notifies the backend (`POST /webhook/wp-changed`).
+On `save_post_application`, `before_delete_post`, and status transitions → fire-and-forget **`POST {backend}/webhook/wp-changed`**.
 
 ## Public catalogue
 
-REST **`GET /wp-json/wp/v2/application`** exposes enriched metadata (price, version, badge, file IDs) for the Mini App and marketing pages. Theme renders public application archives; the plugin does not implement checkout UI.
+REST **`GET /wp-json/wp/v2/application?_embed&per_page=100`** returns enriched metadata:
 
-## Ecosystem
+- Price, version, badge text
+- File IDs for delivery mapping
+- Marketing fields consumed by the Mini App and theme app cards
 
-| Component | Role |
-|-----------|------|
-| **le-shop-plugin** | WordPress catalogue + webhook |
-| **le-crypto-app-store** | Telegram shop, USDC/ETH payments, delivery |
-| **le-settings-plugin** | Site security/SEO (separate) |
+Public archives render through [logic-encoder-theme](https://github.com/logicencoder/logic-encoder-theme-overview) — the plugin does not implement checkout UI.
+
+## Admin AJAX
+
+`le_save_settings`, `le_test_webhook`, `le_fetch_warehouse` — settings persistence and warehouse reconciliation without leaving wp-admin.
 
 See [REPOS.md](REPOS.md).
 
