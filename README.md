@@ -1,41 +1,55 @@
 # LE Shop — WordPress catalogue plugin
 
-WordPress **catalogue authority** for the Logic Encoder Telegram Mini App store. Operators manage **`application`** custom post types in wp-admin; every publish, update, or delete syncs to the crypto checkout backend automatically.
+LE Shop is the catalogue control panel for the Logic Encoder software store. Operators create and edit app listings in WordPress, and every publish/update/delete event is pushed to the checkout backend so Telegram Mini App buyers always see the current title, price, version, and download mapping.
 
-Private plugin: [logicencoder/le-shop-plugin](https://github.com/logicencoder/le-shop-plugin). Checkout and delivery: [le-crypto-app-store](https://github.com/logicencoder/le-crypto-app-store) — [store overview](https://github.com/logicencoder/le-crypto-app-store-overview).
+## Tech stack
 
-## Split of responsibilities
+| Layer | Technologies |
+|-------|--------------|
+| Platform | WordPress plugin (PHP) |
+| Product model | Custom post type `application` + post meta |
+| Sync | Webhook calls from WordPress to Node backend |
+| Admin UX | wp-admin pages + AJAX actions |
+| Public data | WordPress REST API (`wp/v2/application`) |
 
-| Layer | Owns |
-|-------|------|
-| **LE Shop (this plugin)** | Product copy, pricing metadata, version badges, warehouse comparison in wp-admin |
-| **Crypto App Store backend** | USDC/ETH payments, unique amount matching, zip delivery, Telegram bot |
-| **le-settings-plugin** | Site security/SEO — unrelated to payments |
+## Catalogue editing in wp-admin
 
-## Operator workflow
+The plugin adds an `application` post type and structured metadata for each product entry: pricing, version, badge/status, requirements, file ID, and update label. This keeps product marketing and storefront data in one editorial workflow instead of scattered JSON files.
 
-**LE Shop** admin menu:
+Operators can update product cards without touching backend code. The frontend apps consume the same structured metadata, so catalogue changes are visible consistently in website listings and the Telegram storefront.
 
-- **Dashboard** — application counts, backend ping health
-- **Items / Warehouse** — side-by-side WordPress posts vs backend warehouse rows (missing files flagged)
-- **Settings** — backend URL, webhook secret, admin API key, Telegram bot link/username
+## Automatic backend sync
 
-On `save_post_application`, `before_delete_post`, and status transitions → fire-and-forget **`POST {backend}/webhook/wp-changed`**.
+When an application changes state (created, updated, deleted, status changed), LE Shop sends a fire-and-forget webhook to the checkout backend (`/webhook/wp-changed`). This removes the old manual "remember to sync store data" step.
 
-## Public catalogue
+The webhook layer is built for operational safety: the secret is configurable in Settings, and operators can run a test call from wp-admin to validate backend reachability before publishing large catalogue updates.
 
-REST **`GET /wp-json/wp/v2/application?_embed&per_page=100`** returns enriched metadata:
+## Dashboard, warehouse, and settings screens
 
-- Price, version, badge text
-- File IDs for delivery mapping
-- Marketing fields consumed by the Mini App and theme app cards
+LE Shop ships three operator screens in wp-admin:
 
-Public archives render through [logic-encoder-theme](https://github.com/logicencoder/logic-encoder-theme-overview) — the plugin does not implement checkout UI.
+- **Dashboard** for quick counts and backend health checks.
+- **Items / Warehouse** to compare WordPress catalogue rows against backend warehouse rows and detect missing files.
+- **Settings** for backend URL, webhook secret, admin API key, and Telegram bot pointers used in the buying flow.
 
-## Admin AJAX
+This split makes incident work faster: if buyers report delivery issues, operators can check backend health and warehouse mismatches immediately from WordPress.
 
-`le_save_settings`, `le_test_webhook`, `le_fetch_warehouse` — settings persistence and warehouse reconciliation without leaving wp-admin.
+## REST metadata for storefront consumers
 
+The plugin enriches `application` REST responses with normalized metadata used by other surfaces:
+
+- Mini App product cards
+- Theme app listings
+- Backend import/sync flows
+
+That means one product definition in WordPress can drive multiple storefront UIs without duplicate data entry.
+
+## Product boundaries
+
+LE Shop owns catalogue content and sync orchestration. It does **not** process payments or send delivery files. Those steps are handled by the dedicated checkout backend.
+
+Private code: [logicencoder/le-shop-plugin](https://github.com/logicencoder/le-shop-plugin)  
+Related checkout service: [le-crypto-app-store](https://github.com/logicencoder/le-crypto-app-store)  
 See [REPOS.md](REPOS.md).
 
 ---
