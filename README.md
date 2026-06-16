@@ -1,4 +1,4 @@
-# LE Shop — WordPress catalogue for Logic Encoder Crypto App Store
+# LE Shop — WordPress catalogue for Logic Encoder Crypto App Store for Logic Encoder Crypto App Store
 
 **Edit products in WordPress. Buyers see them in Telegram. Checkout and delivery stay automatic.**
 
@@ -8,24 +8,20 @@ LE Shop owns **catalogue content and sync**. It does **not** process payments, w
 
 **Made by [Logic Encoder](https://logicencoder.com)**
 
+**Product name:** LE Shop · pairs with **Logic Encoder Crypto App Store** · private repo `le-shop-plugin`
+
 ---
 
-## Where LE Shop fits in the stack
+## Where LE Shop fits
 
-```
-WordPress (LE Shop)          Node backend (LE CAS)           Telegram
-─────────────────           ─────────────────────           ────────
-Edit application post   →   Webhook / REST import      →   Mini App catalogue
-Set price, file ID          Chain watcher + delivery   →   Auto ZIP to buyer
-Publish / unpublish         Admin dashboard            →   Operator sees sale live
-```
+LE Shop edits catalogue in WordPress. **Logic Encoder Crypto App Store** (LE CAS) runs checkout, chain payment, and auto-delivery. Buyers see WP data in the Telegram Mini App — money and files never touch WordPress.
 
 | You do in WordPress | What happens automatically |
 |---------------------|----------------------------|
 | Publish new application | Webhook → backend refreshes catalogue |
 | Change price or version | Mini App shows updated card on next load |
 | Set file ID `530` | Backend expects `downloads/530.zip` for delivery |
-| Draft or trash item | Webhook `status_changed` / `deleted` — item leaves live shop |
+| Draft or trash item | Webhook removes item from live shop |
 
 ---
 
@@ -57,6 +53,60 @@ The **🚀 Application Technical Data** metabox on every application edit screen
 | `_app_file` | **File ID** — maps to backend `downloads/{id}.zip` | `530` |
 
 The file ID is the critical link between WordPress catalogue and automatic delivery. If `530` is set but `530.zip` is missing on the backend server, delivery fails — both LE Shop **Items / Warehouse** and the LE CAS admin **File Checker** surface this.
+
+---
+
+## Feature examples — two per capability
+
+### Application post type & marketing page
+
+1. Publish `Gas Tracker Pro` — public permalink on logicencoder.com for SEO; Telegram shop pulls same title.
+2. Draft mode — product hidden from REST until you click Publish and webhook fires.
+
+### Technical metabox — price, version, file ID
+
+1. Set `_app_file` `530` and price `29.99` — Mini App shows $29.99 and backend expects `530.zip`.
+2. Badge `NEW` + status `beta` — card shows beta badge in Telegram without code change.
+
+### Webhook auto-sync
+
+1. Update price from $19 to $24 — single **Update** in WP; backend catalogue invalidates within seconds.
+2. Trash old product — webhook `deleted`; buyers no longer see retired tool in cart.
+
+### REST metadata for storefronts
+
+1. Theme queries `wp/v2/application` — same metadata JSON as Telegram Mini App cards.
+2. Mobile app prototype fetches CORS-enabled REST — no duplicate product database.
+
+### Dashboard — backend health
+
+1. **Refresh** ping — HTTP 200 before Black Friday catalogue push.
+2. Stats show 12 active items, 2 ZIPs missing — fix files before announcing sale.
+
+### Items / Warehouse — WP vs backend
+
+1. WP table shows file `712`; backend **Fetch Live** shows ✘ MISSING — you upload ZIP to LE CAS server.
+2. Edit button jumps to metabox — fix typo in version without opening LE CAS admin.
+
+### Settings — backend URL & webhook secret
+
+1. **Test Connection** after tunnel URL change — catch wrong secret before publish.
+2. Lock `LE_BACKEND_URL` in `functions.php` — editors cannot accidentally point staging to prod.
+
+### Settings — bot deep links
+
+1. Save `https://t.me/YourBot/YourApp` — marketing copies per-item links from LE CAS warehouse UI.
+2. Bot username field — documentation for support staff answering “which bot?”
+
+### Operator workflow — new product
+
+1. Monday: upload ZIP, publish WP post, Fetch Live ✔, post deep link in Telegram channel.
+2. Friday price drop: edit metabox only — no LE CAS warehouse row edit needed when WP is source.
+
+### Operator workflow — incident
+
+1. Buyer reports wrong version — bump `_app_version` in WP; webhook refreshes shop cards.
+2. Delivery failed — LE Shop shows disk OK but WP file ID wrong; fix `_app_file` and re-publish.
 
 ---
 
