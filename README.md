@@ -12,6 +12,19 @@ LE Shop owns **catalogue content and sync**. It does **not** process payments, w
 
 ---
 
+## Tech stack
+
+| Layer | Technologies |
+|-------|----------------|
+| Platform | WordPress plugin (PHP 8.0+) |
+| Product model | CPT `application` + post meta |
+| Admin UI | wp-admin pages (Dashboard, Items/Warehouse, Settings) + AJAX |
+| Sync | `wp_remote_post` webhook (non-blocking) |
+| Public data | WordPress REST API `wp/v2/application` + `metadata` field |
+| Styling | Scoped admin CSS (`.le-wrap`, `.le-card`, `.le-tbl`) |
+
+---
+
 ## Where LE Shop fits
 
 LE Shop edits catalogue in WordPress. **Logic Encoder Crypto App Store** (LE CAS) runs checkout, chain payment, and auto-delivery. Buyers see WP data in the Telegram Mini App — money and files never touch WordPress.
@@ -56,7 +69,7 @@ The file ID is the critical link between WordPress catalogue and automatic deliv
 
 ---
 
-## Feature examples — two per capability
+## In practice
 
 ### Application post type & marketing page
 
@@ -269,10 +282,12 @@ All `application` posts (publish, draft, private):
 
 ---
 
-## What LE Shop does not do
+## Handled by the backend
 
-| Not in this plugin | Handled by LE CAS backend |
-|--------------------|---------------------------|
+LE Shop owns catalogue and metadata; the LE CAS backend owns money and files:
+
+| Backend responsibility | Mechanism |
+|------------------------|-----------|
 | Payment processing | USDC/ETH on-chain matching |
 | Order creation | `/test-data` checkout endpoint |
 | Chain watching | Embedded watchdog |
@@ -282,20 +297,6 @@ All `application` posts (publish, draft, private):
 
 Keeping boundaries strict prevents WordPress from becoming a payment surface and keeps delivery logic in one auditable Node process.
 
----
-
-## Tech stack
-
-| Layer | Technologies |
-|-------|----------------|
-| Platform | WordPress plugin (PHP 8.0+) |
-| Product model | CPT `application` + post meta |
-| Admin UI | wp-admin pages (Dashboard, Items/Warehouse, Settings) + AJAX |
-| Sync | `wp_remote_post` webhook (non-blocking) |
-| Public data | WordPress REST API `wp/v2/application` + `metadata` field |
-| Styling | Scoped admin CSS (`.le-wrap`, `.le-card`, `.le-tbl`) |
-
----
 
 ## Related repositories
 
