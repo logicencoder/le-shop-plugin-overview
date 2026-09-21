@@ -1,4 +1,6 @@
-# LE Shop — WordPress catalogue for Logic Encoder Crypto App Store for Logic Encoder Crypto App Store
+# LE Shop — WordPress catalogue for Logic Encoder Crypto App Store
+
+![Applications catalogue on logicencoder.com — live app cards rendered from plugin data](applications.png)
 
 **Edit products in WordPress. Buyers see them in Telegram. Checkout and delivery stay automatic.**
 
