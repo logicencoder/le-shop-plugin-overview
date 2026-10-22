@@ -29,7 +29,7 @@ Product changes can be reflected in the connected shopping experience, reducing 
 
 ## Maintain the integration
 
-Settings provide the operator's connection and shop-link controls, while the dashboard assists with investigating a mismatch. A useful routine is to prepare the product, confirm its deliverable is available and check the buyer-facing listing. Additional administrator screenshots would illustrate that routine.
+Settings provide the operator's connection and shop-link controls, while the dashboard assists with investigating a mismatch. A useful routine is to prepare the product, confirm its deliverable is available and check the buyer-facing listing.
 
 ---
 
