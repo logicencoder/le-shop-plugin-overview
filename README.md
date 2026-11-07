@@ -1,6 +1,6 @@
 # LE Shop — WordPress Product Catalogue
 
-![LE Shop — WordPress Product Catalogue workspace](applications.png)
+![LE Shop — WordPress Product Catalogue workspace](le-shop-product-catalogue-applications.png)
 
 A software store needs an editorial place to explain products as well as a way to sell them. LE Shop lets the operator maintain application pages and sales information in WordPress while keeping the catalogue connected to the Crypto App Store purchase experience.
 
